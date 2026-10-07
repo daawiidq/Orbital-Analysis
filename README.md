@@ -1,79 +1,44 @@
-# Orbital Analysis: Exoplanet Transit Timing and Light-Curve Modeling
+# Exoplanet Light Curves and Transit Timing
 
-This repository contains a set of Python/Jupyter Notebook workflows for analyzing exoplanet transit light curves from TESS data. The notebooks demonstrate light-curve download and cleaning, transit removal and flattening, Box Least Squares (BLS) searches, phase folding, time binning, and transit timing analysis.
+Python notebooks exploring astronomical time series: data cleaning, periodic-signal searches, phase folding, nonlinear fitting, and timing residuals.
 
-The project was developed as part of an astrophysics research workflow focused on exoplanet transit analysis and orbital-decay-related timing measurements.
+**Start here:** [phase folding and binning](03_phase_folding_and_time_binning.ipynb), then [Kepler-1658 transit timing](04_kepler1658_sector41_transit_timing.ipynb). Each notebook now explains its question, assumptions, and interpretation limits.
 
-## Project Highlights
+## Workflow
 
-- Download and inspect TESS light curves with `lightkurve`
-- Clean and flatten light curves for transit analysis
-- Model transit light curves using the Mandel & Agol analytic transit model
-- Run Box Least Squares (BLS) period searches
-- Fold light curves by period and bin data in time/phase
-- Demonstrate transit timing workflows on systems such as WASP-8, Proxima Centauri, Kepler-1658, WASP-12, and HD 209458
+TESS light curves → quality cuts and normalization → period search or transit fitting → diagnostic plots and timing residuals.
 
-## Repository Structure
+| Notebook | Target | Analysis |
+| --- | --- | --- |
+| [01](01_hot_jupiter_clean_flatten_bls_search.ipynb) | WASP-8 | Flattening, known-transit masking, residual BLS search |
+| [02](02_proxima_centauri_transit_search.ipynb) | Proxima Centauri | Flare filtering and exploratory BLS search |
+| [03](03_phase_folding_and_time_binning.ipynb) | WASP-12 | Time bins and phase folding at twice the reference period |
+| [04](04_kepler1658_sector41_transit_timing.ipynb) | Kepler-1658 | Transit-center fits, linear ephemeris, observed-minus-calculated residuals |
+| [05](05_transit_timing_demonstration.ipynb) | HD 209458 | A second transit timing workflow |
 
-```text
-.
-├── mandelagol.py
-├── 01_hot_jupiter_clean_flatten_bls_search.ipynb
-├── 02_proxima_centauri_transit_search.ipynb
-├── 03_phase_folding_and_time_binning.ipynb
-├── 04_kepler1658_sector41_transit_timing.ipynb
-├── 05_transit_timing_demonstration.ipynb
-├── requirements.txt
-└── .gitignore
-```
+## Run
 
-## Notebooks
-
-| Notebook | Description |
-|---|---|
-| `01_hot_jupiter_clean_flatten_bls_search.ipynb` | Cleans and flattens a hot-Jupiter light curve, removes transits, and performs a BLS search. |
-| `02_proxima_centauri_transit_search.ipynb` | Applies a similar TESS light-curve search and transit-analysis workflow to Proxima Centauri. |
-| `03_phase_folding_and_time_binning.ipynb` | Demonstrates phase folding and time/binning methods for transit light-curve analysis. |
-| `04_kepler1658_sector41_transit_timing.ipynb` | Demonstrates transit timing analysis for Kepler-1658 using TESS Sector 41 data. |
-| `05_transit_timing_demonstration.ipynb` | Provides a general transit timing demonstration using TESS light curves. |
-
-## Installation
-
-Create a Python environment and install the dependencies:
+Use Python 3 in a virtual environment, from the repository root:
 
 ```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Launch Jupyter from the repository root so that the notebooks can import `mandelagol.py`:
-
-```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 jupyter notebook
 ```
 
-Then open the notebooks in numerical order.
+Windows PowerShell: activate with `.venv\Scripts\Activate.ps1`. Internet access is needed to download archive data. Dependencies are not locked to a fully reproduced environment.
 
-## Main Dependencies
+## Reproducibility and interpretation
 
-- `numpy`
-- `scipy`
-- `matplotlib`
-- `astropy`
-- `lightkurve`
-- `lmfit`
-- `jupyter`
+- These are exploratory notebooks, with manual cuts and target-specific parameters. Inspect the raw data and masks before rerunning an analysis.
+- Archive products are selected by numeric search-result indices. Those indices can change. Inspect the search table and record the sector, author, cadence, and product identifier before using a result.
+- Notebook 04's filename retains the original Sector 41 label; its current index-based selection does **not** guarantee Sector 41.
+- Stored outputs are cleared. The current documentation update includes syntax checks, not a fresh end-to-end execution against the archive; no new numerical results are claimed.
+- A BLS peak is a candidate periodic signal, not a discovery. Timing residuals alone do not establish orbital decay. Correlated noise, model assumptions, ephemeris uncertainty, and the observing baseline matter.
 
-## Scientific References
+## Model attribution
 
-The transit model implementation in `mandelagol.py` is based on analytic light-curve calculations from:
+`mandelagol.py` is a reused analytic transit-model implementation. Its original header and credits are retained. The analysis notebooks use this model; the underlying analytic model is not claimed as original work.
 
-- Mandel, K., & Agol, E. (2002). *Analytic light curves for planetary transit searches*. The Astrophysical Journal Letters.
-- Eastman, J., & Agol, E. (2008). Related implementation notes and code translation referenced in the source file.
-
-If this code is used for research, please cite the relevant scientific sources and data products.
-
-## Notes
-
-The notebooks were cleaned before upload by removing saved cell outputs and execution counts. This keeps the repository lightweight and easier to review on GitHub.
+Follow the source header's attribution to Mandel & Agol (2002), *Analytic Light Curves for Planetary Transit Searches*, and Eastman & Agol (2008). Cite the relevant TESS data products and Lightkurve when using the analysis in research.
